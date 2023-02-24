@@ -24,6 +24,27 @@ test_num = 10000
 img_dim  = (1, 28, 28)
 img_size = 784
 
+
+def _download(file_name):
+    file_path = dataset_dir + "/" + file_name
+    
+    if( os.path.exists(file_path)):
+        return
+    
+    print("Downloading " + file_name + " ... ")
+    headers = {"User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0"}
+    request = urllib.request.Request(url_base+file_name, headers=headers)
+    response = urllib.request.urlopen(request).read()
+    with open(file_path, mode='wb') as f:
+        f.write(response)
+        
+    print("Done")
+
+def download_mnist():
+    for v in key_file.values():
+        _download(v)
+
+
 def _load_img(file_name):
     file_path = dataset_dir + "/" + file_name
 
@@ -55,8 +76,6 @@ def init_mnist():
     print("Done!")
 
 
-def download_mnist():
-    print("")
 
 if __name__ == '__main__':
     init_mnist()
