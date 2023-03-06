@@ -21,3 +21,4 @@ img = img.reshape(28,28)      # 現状を元の画像サイズに変形
 print(img.shape)      # (28, 28)
 
 img_show(img)
+img_show(img)
