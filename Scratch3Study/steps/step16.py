@@ -22,8 +22,19 @@ class Variable:
     def backward(self):
         if self.grad is None:
             self.grad = np.ones_like(self.data)
+
+        funcs = []
+        seen_set = set()
+
+        def add_func(f):
+            if f not in seen_set:
+                funcs.append(f)
+                seen_set.add(f)
+                funcs.sort(key=lambda x: x.generation)
+
+        add_func(self.creator)
             
-        funcs = [self.creator]
+        #funcs = [self.creator]
         while funcs:
             f = funcs.pop()
             gys = [output.grad for output in f.outputs] # 出力の微分をリストにする
@@ -38,7 +49,8 @@ class Variable:
                     x.grad = x.grad + gx # 入力変数に微分を加算
 
                 if x.creator is not None:
-                    funcs.append(x.creator) # さらに上流の関数も取得
+                    #funcs.append(x.creator) # さらに上流の関数も取得
+                    add_func(x.creator)
 
 def as_array(x):
     if np.isscalar(x):
