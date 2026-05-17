@@ -10,9 +10,11 @@ class Variable:
         self.data       = data
         self.grad       = None
         self.creator    = None
+        self.generation = 0
 
     def set_creator(self, func):
-        self.creator = func
+        self.creator    = func
+        self.generation = func.generation + 1
 
     def cleargrad(self):
         self.grad = None
@@ -52,6 +54,7 @@ class Function:
 
         outputs = [Variable(as_array(y)) for y in ys] # 出力もリストの場合
 
+        self.generation = max([x.generation for x in inputs])
         for output in  outputs: # 出力がリストの場合
             output.set_creator(self) # 出力変数に生みの親を覚えさせる
 
