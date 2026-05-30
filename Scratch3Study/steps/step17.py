@@ -1,3 +1,4 @@
+import weakref
 import numpy as np
 
 class Variable:
@@ -37,7 +38,8 @@ class Variable:
         #funcs = [self.creator]
         while funcs:
             f = funcs.pop()
-            gys = [output.grad for output in f.outputs] # 出力の微分をリストにする
+            #gys = [output.grad for output in f.outputs] # 出力の微分をリストにする
+            gys = [output().grad for output in f.outputs] # 出力の微分をリストにする
             gxs = f.backward(*gys) # アンパックして渡す
             if not isinstance(gxs, tuple): # タブルでない場合はタプルにする
                 gxs = (gxs,)
@@ -71,7 +73,8 @@ class Function:
             output.set_creator(self) # 出力変数に生みの親を覚えさせる
 
         self.inputs = inputs # 入力も覚える
-        self.outputs = outputs # 出力も覚える
+        #self.outputs = outputs # 出力も覚える
+        self.ouuputs = [weakref.ref(output) for output in outputs] # 出力を弱参照で覚える
 
         return outputs if len(outputs) > 1 else outputs[0] # 出力が1つだけならVariableを返す
 
@@ -109,21 +112,7 @@ def add(x0, x1):
     return Add()(x0, x1)
 
 
-# x = Variable(np.array(2.0))
-# y = add(x, x)
-# y.backward()
-# print(x.grad)
-
-# #x = Variable(np.array(3.0))
-# x.cleargrad()
-# y = add(add(x, x), x)
-# y.backward()
-# print(x.grad)
-
-x = Variable(np.array(2.0))
-a = square(x)
-y = add(square(a), square(a))
-y.backward()
-
-print(y.data)
-print(x.grad)
+for i in range(10):
+    x = Variable(np.random.randn(10000)) # big datq
+    y = square(square(square(x)))
+    
