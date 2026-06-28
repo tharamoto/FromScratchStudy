@@ -98,7 +98,7 @@ class Variable:
                     x.grad = x.grad + gx # 入力変数に微分を加算
 
                 if x.creator is not None:
-                    #funcs.append(x.creator) # さらに上流の関数も取得
+                    #funcs.append(x.creator) # さらに上流の関数も取得、ここでの関数追加でスタックが積みあがる
                     add_func(x.creator)
 
             if not retain_grad:
