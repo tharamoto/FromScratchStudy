@@ -178,11 +178,15 @@ class Mul(Function):
 def mul(x0, x1):
     return Mul()(x0, x1)
 
+Variable.__add__ = add
+Variable.__mul__ = mul
+
 a = Variable(np.array(3.0))
 b = Variable(np.array(2.0))
 c = Variable(np.array(1.0))
 
-y = add(mul(a, b), c)
+#y = add(mul(a, b), c)
+y = a * b + c
 
 y.backward()
 
