@@ -3,6 +3,8 @@ import numpy as np
 import contextlib
 
 
+# パッケージにする作業に映るのか 2026/08/23(日)
+
 class Config:
     enable_backprop = True
 
