@@ -4,7 +4,7 @@ import numpy as np
 
 
 def _dot_var(v, verbose=False):
-    dot_var = '{} [label="{}", color=orage, style=filled]\n'
+    dot_var = '{} [label="{}", color=orange, style=filled]\n'
 
     name = '' if v.name is None else v.name
     if verbose and v.data is not None:
@@ -50,5 +50,23 @@ def get_dot_graph(output, verbose=True):
             if x.creator is not None:
                 add_func(x.creator)
 
-        return 'digraph g {\n' + txt + '}'
+    return 'digraph g {\n' + txt + '}'
+
+
+def plot_dot_graph(output, verbose=True, to_file='graph.png'):
+    dot_graph = get_dot_graph(output, verbose)
+
+    tmp_dir = os.path.join(os.path.expanduser('~'), '.dezero')
+    if not os.path.exists(tmp_dir):
+        os.mkdir(tmp_dir)
+    graph_path = os.path.join(tmp_dir, 'tmp_graph.dot')
+
+    with open(graph_path, 'w') as f:
+        f.write(dot_graph)
+
+    extension = os.path.splitext(to_file)[1][1:] # 拡張子を取得
+    cmd = 'dot {} -T {} -o {}'.format(graph_path, extension, to_file)
+    subprocess.run(cmd, shell=True)
+
+
     
