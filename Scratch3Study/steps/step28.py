@@ -10,6 +10,7 @@ def rosenbrock(x0, x1):
     y = 100 * (x1 - x0 ** 2)**2 + (x0 - 1)**2
     return y
 
+# 偏微分について色々と考えた 2026/10/10
 x0 = Variable(np.array(0.0))
 x1 = Variable(np.array(2.0))
 y = rosenbrock(x0, x1)
